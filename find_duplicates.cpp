@@ -15,7 +15,6 @@ int FindFileDuplicates(char* file, char* dirpath)
 {
     DIR *dir;
     struct dirent *dp;
-    struct dirent *result;
     struct stat statp;
 
     char absoluteFilePath[255];
@@ -53,11 +52,10 @@ int FindDuplicates(char* dir1path, char* dir2path)
     DIR *dir1;
     struct dirent *dp1;
     struct stat statp;
-
     char absoluteFile1Path[255];
 
     if ((dir1 = opendir(dir1path))== NULL) {
-        perror("Failed to open directory 1");
+        perror("Failed to open directory");
         return -1;
     }
     while ((dp1 = readdir(dir1)) != NULL) {

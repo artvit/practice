@@ -19,6 +19,9 @@ bool CompareFiles(compare_result& cr)
     if (cr.bytesInFile1 != cr.bytesInFile2)
         return false;
 
+    if (cr.bytesInFile1 == 0)
+        return false;
+
     int fdFile1  = open(cr.file1, O_RDONLY);
     int fdFile2	= open(cr.file2, O_RDONLY);
 
