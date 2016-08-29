@@ -14,7 +14,7 @@ void start_worker();
 
 void init(int value)
 {
-    semaphore = sem_open("file_duplic_semaphore17", O_CREAT, 0644, 1);
+    semaphore = sem_open("file_duplic_semaphore", O_CREAT, 0644, 1);
     if (semaphore == SEM_FAILED) {
         perror("Unable to create semaphore");
         sem_close(semaphore);
