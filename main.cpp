@@ -7,14 +7,19 @@
 #include "find_duplicates.h"
 #include "compare_files.h"
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc != 4) {
+        perror("Not enough arguments");
+        exit(-1);
+    }
+    int processnum = atoi(argv[3]);
     init(4);
     close(task_pipe[0]);
     int pid = fork();
     if (pid == 0) {
         close(result_pipe[0]);
-        FindDuplicates("/home/artem/Documents", "/etc");
+        FindDuplicates(argv[1], argv[2]);
         close(result_pipe[1]);
         close(task_pipe[1]);
         exit(0);
@@ -22,10 +27,16 @@ int main()
         close(result_pipe[1]);
         close(task_pipe[1]);
         compare_result cr;
+        int counter = 0;
         while (read(result_pipe[0], &cr, sizeof(compare_result)) > 0) {
-            printf("pid: %d\nfile 1: %s\nbytes: %d\nfile 2: %s\nbytes: %d\nresult: %d\n\n",
-                   cr.pid, cr.file1, cr.bytesInFile1, cr.file2, cr.bytesInFile2, cr.result);
+            if (cr.result) {
+                printf("pid: %d\nfile 1: %s\nbytes: %d\nfile 2: %s\nbytes: %d\n\n",
+                       cr.pid, cr.file1, cr.bytesInFile1, cr.file2, cr.bytesInFile2);
+                ++counter;
+            }
         }
+        if (counter == 0)
+            printf("No duplicates found");
         close(result_pipe[0]);
         wait(NULL);
     }
